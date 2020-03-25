@@ -78,3 +78,10 @@ typings/
 
 # DynamoDB Local files
 .dynamodb/
+
+# VS workspace files
+.vscode/
+*.code-workspace
+
+Thumbs.db
+.DS_Store
