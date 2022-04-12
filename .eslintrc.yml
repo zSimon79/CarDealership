@@ -26,3 +26,5 @@ rules:
   max-lines-per-function: ["error", 80]
   complexity: ["error", 8]
   class-methods-use-this: 0
+  arrow-parens: ["error", "always"]
+  import/extensions: ["error", {"js": "always", "ts": "never"}]
