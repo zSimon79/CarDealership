@@ -29,6 +29,10 @@ h2 {
   text-align: center;
 }
 
+h2 {
+  margin-top: 50px;
+}
+
 nav {
   display: flex;
   justify-content: space-between;
@@ -137,6 +141,10 @@ section ol {
 .link2 a:visited {
     color: cyan;
     text-decoration: bold;
+}
+
+.link2{
+  margin-top: 120px;
 }
 
 .leiras {
