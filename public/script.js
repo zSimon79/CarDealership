@@ -6,15 +6,13 @@ carImage.src = '../kepek/car.png';
 let car = { x: canvas.width / 2, y: canvas.height / 2, angle: 0 };
 carImage.width = 125;
 carImage.height = 75;
-
+const scaledWidth = carImage.width * 0.5;
+const scaledHeight = carImage.height * 0.5;
 function drawCar() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.save();
   ctx.translate(car.x, car.y);
   ctx.rotate((car.angle * Math.PI) / 180);
-
-  const scaledWidth = carImage.width * 0.5;
-  const scaledHeight = carImage.height * 0.5;
 
   ctx.drawImage(carImage, -scaledWidth / 2, -scaledHeight / 2, scaledWidth, scaledHeight);
 
@@ -64,8 +62,10 @@ function resetPosition() {
   car = { x: canvas.width / 2, y: canvas.height / 2, angle: 0 };
   drawCar();
 }
-
-document.getElementById('startButton').addEventListener('click', startMovement);
+document.getElementById('controlForm').addEventListener('submit', (event) => {
+  event.preventDefault();
+  startMovement();
+});
 document.getElementById('resetButton').addEventListener('click', resetPosition);
 
 carImage.onload = () => {
