@@ -1,32 +1,56 @@
-body {
-  font-family: 'Arial', sans-serif;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+body, h1, form {
   margin: 0;
-  height: 100vh;
-  background: #757373;
+  padding: 0;
+  box-sizing: border-box;
 }
 
+body {
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+  padding: 20px;
+  background-color: #f4f4f4;
+}
 
-
-#pageTitle {
-  font-size: 36px;
+h1 {
   color: #333;
-  margin-top: 20px;
 }
 
-.canvas-container {
-  position: relative;
+form {
+  background: #ffffff;
   margin: 20px;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-canvas {
-  background-image: url('../kepek/parkinglot.jpg'); 
-  background-size: cover;
+input[type="text"],
+input[type="date"],
+input[type="file"] {
+  width: 100%;
+  padding: 8px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
 }
 
-#controlForm {
-  margin-top: 20px;
+input[type="submit"] {
+  width: 100%;
+  background-color: #4CAF50;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+input[type="submit"]:hover {
+  background-color: #45a049;
+}
+
+label {
+  margin-top: 10px;
+  display: block;
 }

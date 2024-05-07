@@ -1,31 +1,36 @@
 <!DOCTYPE html>
 <html lang="hu">
-  <head>
-    <meta charset="UTF-8" >
-    <title>Autó</title>
-    <link rel="stylesheet" href="style.css">
-  </head>
-  <body>
-    <h1 id="pageTitle">Autó Animáció</h1>
-    <div class="canvas-container">
-        <canvas id="canvas" width="500" height="300"></canvas>
-    </div>
-    <form id="controlForm">
-        <label for="interval">Idő (ms):</label>
-        <input type="number" id="interval" value="1000" >
-        <fieldset>
-          <legend>Mozgás</legend>
-          <label><input type="radio" name="action" value="forward" > Előre</label>
-          <label><input type="radio" name="action" value="backward" > Hátra</label>
-          <label><input type="radio" name="action" value="right" > Jobbra fordul</label>
-          <label><input type="radio" name="action" value="left" > Balra fordul</label>
-          <label><input type="radio" name="action" value="stop" > Stop</label>
-        </fieldset>
-        <label for="step">Lépésszám/Szög:</label>
-        <input type="number" id="step" value="10" >
-        <button type="submit" id="startButton">Indít</button>
-        <button type="button" id="resetButton">Reset</button>
-      </form>
-    <script src="script.js"></script>
-  </body>
+<head>
+<meta charset="UTF-8">
+<title>Autó kereskedés</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Használt autó listázása</h1>
+  <form action="/listings" method="post">
+    Márka: <input type="text" name="brand"><br>
+    Város: <input type="text" name="city"><br>
+    Ár: <input type="text" name="price"><br>
+    Dátum: <input type="date" name="date"><br>
+    <input type="submit" value="Submit">
+  </form>
+
+  <h1>Kép feltöltése listázáshoz</h1>
+  <form action="/upload" method="post" enctype="multipart/form-data" onsubmit="uploadImage(event)">
+    Listázás ID: <input type="text" id="listingId"><br>
+    Kép: <input type="file" id="imageFile"><br>
+    <input type="submit" value="Upload Image">
+  </form>
+
+  <h1>Listázások keresése</h1>
+  <form action="/search" method="get">
+    Márka: <input type="text" name="brand"><br>
+    Város: <input type="text" name="city"><br>
+    Min Ár: <input type="text" name="minPrice"><br>
+    Max Ár: <input type="text" name="maxPrice"><br>
+    <input type="submit" value="Search">
+  </form>
+
+  <script type="module" src="script.js"></script>
+</body>
 </html>
