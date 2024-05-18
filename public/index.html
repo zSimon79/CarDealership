@@ -8,19 +8,20 @@
 <body>
   <h1>Használt autó listázása</h1>
   <form action="/listings" method="post">
-    Márka: <input type="text" name="brand"><br>
-    Város: <input type="text" name="city"><br>
-    Ár: <input type="text" name="price"><br>
-    Dátum: <input type="date" name="date"><br>
+    Márka: <input type="text" name="brand" required><br>
+    Város: <input type="text" name="city" required><br>
+    Ár: <input type="number" name="price" required><br>
+    Dátum: <input type="date" name="date" required><br>
     <button type="submit">Listázás</button>
   </form>
 
   <h1>Kép feltöltése listázáshoz</h1>
-  <form action="/upload" method="post" enctype="multipart/form-data" onsubmit="uploadImage(event)">
-    Listázás ID: <input type="text" id="listingId"><br>
-    Kép: <input type="file" id="imageFile"><br>
-    <button type="submit">Feltöltés</button>
-  </form>
+  <form id="uploadForm" method="post" enctype="multipart/form-data">
+    Listázás ID: <input type="text" id="listingId" name="listingId" required><br>
+    Kép: <input type="file" id="imageFile" name="image" required><br>
+    <button type="submit">Kép Feltöltése</button>
+</form>
+<div id="message"></div>
 
   <h1>Listázások keresése</h1>
   <form action="/search" method="get">

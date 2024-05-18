@@ -1,27 +1,24 @@
-export function uploadImage(event) {
+document.getElementById('uploadForm').addEventListener('submit', function submitForm(event) {
   event.preventDefault();
-
+  const formData = new FormData(this);
   const listingId = document.getElementById('listingId').value;
-  const imageFile = document.getElementById('imageFile').files[0];
+  const actionUrl = `/upload/${listingId}`;
 
-  if (!listingId || !imageFile) {
-    alert('Please fill in all fields and select an image.');
-    return;
-  }
-
-  const formData = new FormData();
-  formData.append('image', imageFile);
-
-  fetch(`/upload/${listingId}`, {
+  fetch(actionUrl, {
     method: 'POST',
     body: formData,
   })
     .then((response) => {
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        throw new Error('Hálozati hiba');
       }
       return response.json();
     })
-    .then((data) => alert(`Upload Successful: ${JSON.stringify(data)}`))
-    .catch((error) => console.error('Error:', error));
-}
+    .then((data) => {
+      document.getElementById('message').innerText = data.message;
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+      document.getElementById('message').innerText = error.message;
+    });
+});
