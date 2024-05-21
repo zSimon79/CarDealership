@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add New Listing</title>
+</head>
+<body>
+    <h1>Add New Listing</h1>
+
+    <form action="/listings" method="post">
+        <label for="brand">Brand:</label>
+        <input type="text" id="brand" name="brand" required>
+
+        <label for="city">City:</label>
+        <input type="text" id="city" name="city" required>
+
+        <label for="price">Price:</label>
+        <input type="number" id="price" name="price" required>
+
+        <label for="date">Date:</label>
+        <input type="date" id="date" name="date" required>
+
+        <label for="userId">User:</label>
+        <select name="userId" id="userId">
+            <% users.forEach(function(user) { %>
+                <option value="<%= user.felhasznaloID %>"><%= user.nev %></option>
+            <% }) %>
+        </select>
+
+        <button type="submit">Add Listing</button>
+    </form>
+
+    <a href="/">Back to Listings</a>
+</body>
+</html>

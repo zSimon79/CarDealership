@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Listings</title>
+    <link rel="stylesheet" href="../public/styles.css">
+    <script src = "../public/script.js"></script>
+</head>
+<body>
+    <h1>Listings</h1>
+    <form action="/listings/search" method="get">
+        <!-- Brand field -->
+        <label for="brand">Brand:</label>
+        <input type="text" id="brand" name="brand" placeholder="Enter brand" value="<%= searchQuery.marka || '' %>">
+
+        <!-- City field -->
+        <label for="city">City:</label>
+        <input type="text" id="city" name="city" placeholder="Enter city" value="<%= searchQuery.varos || '' %>">
+
+        <!-- Minimum Price field -->
+        <label for="minPrice">Min Price:</label>
+        <input type="number" id="minPrice" name="minPrice" placeholder="Minimum price" value="<%= searchQuery.minAr || '' %>">
+
+        <!-- Maximum Price field -->
+        <label for="maxPrice">Max Price:</label>
+        <input type="number" id="maxPrice" name="maxPrice" placeholder="Maximum price" value="<%= searchQuery.maxAr || '' %>">
+
+        <!-- Date field (if needed) -->
+        <label for="date">Date:</label>
+        <input type="date" id="date" name="date" value="<%= searchQuery.datum || '' %>">
+
+        <button type="submit">Search</button>
+    </form>
+
+    <ul>
+        <% listings.forEach(function(listing) { %>
+            <li>
+                <h2><%= listing.marka %> - <%= listing.ar %></h2>
+                <p>Located in <%= listing.varos %></p>
+                <a href="/listings/<%= listing.autoID %>">View Details</a>
+            </li>
+        <% }) %>
+    </ul>
+
+    <a href="/listings/new">Add New Listing</a>
+</body>
+</html>

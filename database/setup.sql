@@ -1,0 +1,5 @@
+CREATE DATABASE IF NOT EXISTS webprog;
+USE webprog;
+CREATE USER IF NOT EXISTS 'webprog'@'localhost' IDENTIFIED BY 'VgJUjBd8';
+GRANT ALL PRIVILEGES ON webprog.* TO 'webprog'@'localhost';
+FLUSH PRIVILEGES;
