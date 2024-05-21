@@ -1,11 +1,11 @@
-body, h1, form {
+body, h1, form, input, button, label {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Arial', sans-serif;
   line-height: 1.6;
   padding: 20px;
   background-color: #f4f4f4;
@@ -13,29 +13,31 @@ body {
 
 h1 {
   color: #333;
+  margin-bottom: 20px;
 }
 
 form {
   background: #ffffff;
-  margin: 20px;
+  margin: 20px auto;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
 }
 
 input[type="text"],
+input[type="number"],
 input[type="date"],
 input[type="file"] {
   width: 100%;
   padding: 8px;
   margin: 8px 0;
-  display: inline-block;
+  display: block;
   border: 1px solid #ccc;
   border-radius: 4px;
-  box-sizing: border-box;
 }
 
-input[type="submit"] {
+input[type="submit"], button[type="submit"] {
   width: 100%;
   background-color: #4CAF50;
   color: white;
@@ -46,11 +48,13 @@ input[type="submit"] {
   cursor: pointer;
 }
 
-input[type="submit"]:hover {
+input[type="submit"]:hover, button[type="submit"]:hover {
   background-color: #45a049;
 }
 
 label {
   margin-top: 10px;
   display: block;
+  font-weight: bold;
 }
+

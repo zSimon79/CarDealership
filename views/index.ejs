@@ -1,32 +1,27 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Listings</title>
-    <link rel="stylesheet" href="../public/styles.css">
+    <title>Listázások</title>
+    <link rel="stylesheet" href="../public/style.css">
     <script src = "../public/script.js"></script>
 </head>
 <body>
-    <h1>Listings</h1>
-    <form action="/listings/search" method="get">
-        <!-- Brand field -->
-        <label for="brand">Brand:</label>
-        <input type="text" id="brand" name="brand" placeholder="Enter brand" value="<%= searchQuery.marka || '' %>">
+    <h1>Listázások</h1>
+    <form action="/listings" method="get">
+        <label for="brand">Márka:</label>
+        <input type="text" id="brand" name="marka" placeholder="Márka" value="<%= searchQuery.marka || '' %>">
 
-        <!-- City field -->
-        <label for="city">City:</label>
-        <input type="text" id="city" name="city" placeholder="Enter city" value="<%= searchQuery.varos || '' %>">
+        <label for="city">Város:</label>
+        <input type="text" id="city" name="varos" placeholder="Város" value="<%= searchQuery.varos || '' %>">
 
-        <!-- Minimum Price field -->
-        <label for="minPrice">Min Price:</label>
-        <input type="number" id="minPrice" name="minPrice" placeholder="Minimum price" value="<%= searchQuery.minAr || '' %>">
+        <label for="minPrice">Min ár:</label>
+        <input type="number" id="minPrice" name="minAr" placeholder="Minimum ár" value="<%= searchQuery.minAr || '' %>">
 
-        <!-- Maximum Price field -->
-        <label for="maxPrice">Max Price:</label>
-        <input type="number" id="maxPrice" name="maxPrice" placeholder="Maximum price" value="<%= searchQuery.maxAr || '' %>">
+        <label for="maxPrice">Max ár:</label>
+        <input type="number" id="maxPrice" name="maxAr" placeholder="Maximum ár" value="<%= searchQuery.maxAr || '' %>">
 
-        <!-- Date field (if needed) -->
-        <label for="date">Date:</label>
-        <input type="date" id="date" name="date" value="<%= searchQuery.datum || '' %>">
+        <label for="date">Dátum:</label>
+        <input type="date" id="date" name="datum" value="<%= searchQuery.datum || '' %>">
 
         <button type="submit">Search</button>
     </form>
@@ -35,12 +30,12 @@
         <% listings.forEach(function(listing) { %>
             <li>
                 <h2><%= listing.marka %> - <%= listing.ar %></h2>
-                <p>Located in <%= listing.varos %></p>
-                <a href="/listings/<%= listing.autoID %>">View Details</a>
+                <p>Hely: <%= listing.varos %></p>
+                <a href="/listings/<%= listing.autoID %>">Részletek</a>
             </li>
         <% }) %>
     </ul>
 
-    <a href="/listings/new">Add New Listing</a>
+    <a href="/listings/new">Új listázás hozzáadása</a>
 </body>
 </html>

@@ -1,6 +1,6 @@
 window.onload = function successMessage() {
   const urlParams = new URLSearchParams(window.location.search);
   if (urlParams.get('success') === 'true') {
-    alert('Listing created successfully!');
+    alert('Listázás létrehozva!');
   }
 };

@@ -1,35 +1,32 @@
 import express from 'express';
-import { createUser, getAllUsers, deleteUser } from '../database/dbquery.js'; // Assume these functions are implemented
+import { createUser, getAllUsers, deleteUser } from '../database/dbquery.js';
 
 const router = express.Router();
 
-// Combined route to display and manage users
 router.get('/', async (req, res) => {
   try {
     const users = await getAllUsers();
-    res.render('users', { users }); // Renders the user management page
+    res.render('users', { users });
   } catch (error) {
-    res.status(500).send('Failed to retrieve users');
+    res.status(500).send('Nincs ilyen felhasználó!');
   }
 });
 
-// Handle the addition of a new user
 router.post('/', async (req, res) => {
   try {
     await createUser(req.body.name);
-    res.redirect('/users'); // Redirects back to the user management page
+    res.redirect('/users');
   } catch (error) {
-    res.status(500).send('Failed to add user');
+    res.status(500).send('Nem sikerült felhasználót létrehozni!');
   }
 });
 
-// Handle user deletion
 router.delete('/:id', async (req, res) => {
   try {
     await deleteUser(req.params.id);
-    res.redirect('/users'); // Redirects back to the user management page
+    res.redirect('/users');
   } catch (error) {
-    res.status(500).send('Failed to delete user');
+    res.status(500).send('Ne sikerült a felhasználót törölni!');
   }
 });
 

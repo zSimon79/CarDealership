@@ -1,16 +1,14 @@
-import connectionPool from './dbinit.js'; // Import the connection pool
+import connectionPool from './dbinit.js';
 
-// Create a Listing
 async function createListing({ brand, city, price, date, userId }) {
   const sql = `
         INSERT INTO Autok (marka, varos, ar, datum, felhasznaloID)
         VALUES (?, ?, ?, ?, ?);
     `;
   const [result] = await connectionPool.execute(sql, [brand, city, price, date, userId]);
-  return result.insertId; // Return the ID of the newly created listing
+  return result.insertId;
 }
 
-// Get All Listings
 async function getAllListings() {
   const sql = 'SELECT * FROM Autok;';
   const [rows] = await connectionPool.query(sql);
@@ -23,7 +21,6 @@ async function getListingById(listingId) {
   return rows[0];
 }
 
-// Update a Listing
 async function updateListing({ listingId, brand, city, price, date }) {
   const sql = `
         UPDATE Autok
@@ -33,13 +30,11 @@ async function updateListing({ listingId, brand, city, price, date }) {
   await connectionPool.execute(sql, [brand, city, price, date, listingId]);
 }
 
-// Delete a Listing
 async function deleteListing(listingId) {
   const sql = 'DELETE FROM Autok WHERE autoID = ?;';
   await connectionPool.execute(sql, [listingId]);
 }
 
-// Create a User
 async function createUser(name) {
   const sql = 'INSERT INTO Felhasznalok (nev) VALUES (?);';
   const [result] = await connectionPool.execute(sql, [name]);
@@ -57,7 +52,6 @@ async function getAllUsers() {
   return rows;
 }
 
-// Add an Image to a Listing
 async function addImageToListing({ listingId, filename }) {
   const sql = `
         INSERT INTO Kep (autoID, fajlnev)

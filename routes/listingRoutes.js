@@ -23,17 +23,15 @@ const listingValidation = [
 router.get('/new', async (req, res) => {
   try {
     const users = await getAllUsers();
-    res.render('new', { users, errors: [] }); // Provide an empty array for `errors` if none exist
+    res.render('new', { users, errors: [] });
   } catch (error) {
-    console.error('Failed to fetch data for new listing form:', error);
-    res.status(500).render('error', { error: 'Failed to prepare new listing form' }); // Handle errors appropriately
+    res.status(500).render('error', { error: 'Form hiba' });
   }
 });
 
 router.post('/', listingValidation, async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    // If there are errors, return a response with errors
     return res.status(400).json({ errors: errors.array() });
   }
 
@@ -41,38 +39,12 @@ router.post('/', listingValidation, async (req, res) => {
     const listingId = await createListing(req.body);
     return res.redirect('/?success=true', listingId);
   } catch (error) {
-    // Handle SQL errors or other errors gracefully
     return res.status(500).json({ error: error.message });
   }
 });
 
-router.get('/', async (req, res) => {
-  try {
-    const searchQuery = req.query.search || '';
-    const listings = await getAllListings();
-    res.render('index', { listings, searchQuery });
-  } catch (error) {
-    res.status(500).render('error', { error: error.message });
-  }
-});
-
-router.get('/:id', async (req, res) => {
-  try {
-    const listing = await getListingById(req.params.id);
-    if (listing) {
-      const images = await getImagesByCarId(req.params.id);
-      listing.images = images;
-      res.render('details', { listing });
-    } else {
-      res.status(404).render('error', { message: 'Listing not found' });
-    }
-  } catch (error) {
-    res.status(500).render('error', { error: error.message });
-  }
-});
-
 router.get(
-  '/search',
+  '/',
   [
     query('marka').optional().isString().trim(),
     query('varos').optional().isString().trim(),
@@ -83,18 +55,40 @@ router.get(
   async (req, res) => {
     try {
       const filters = req.query;
-      const listings = await searchListings(filters);
-      res.json(listings);
+      let listings = [];
+
+      if (Object.values(filters).some((v) => v !== undefined && v !== '' && v != null)) {
+        listings = await searchListings(filters);
+      } else {
+        listings = await getAllListings();
+      }
+
+      res.render('index', { listings, searchQuery: req.query });
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      res.status(500).render('error', { error: error.message });
     }
   },
 );
 
+router.get('/:id', async (req, res) => {
+  try {
+    const listing = await getListingById(req.params.id);
+    if (listing) {
+      const images = await getImagesByCarId(req.params.id);
+      listing.images = images;
+      res.render('details', { listing });
+    } else {
+      res.status(404).render('error', { message: 'Listázás nem található' });
+    }
+  } catch (error) {
+    res.status(500).render('error', { error: error.message });
+  }
+});
+
 router.put('/:id', async (req, res) => {
   try {
     await updateListing({ listingId: req.params.id, ...req.body });
-    res.status(200).json({ message: 'Listing updated successfully' });
+    res.status(200).json({ message: 'Listázás frissítve' });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -103,7 +97,7 @@ router.put('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
   try {
     await deleteListing(req.params.id);
-    res.status(200).json({ message: 'Listing deleted successfully' });
+    res.status(200).json({ message: 'Listázás törölve' });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

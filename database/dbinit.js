@@ -1,7 +1,7 @@
 import mysql2 from 'mysql2/promise.js';
 
 const connectionPool = mysql2.createPool({
-  connectionLimit: 10, // the maximum number of connections in the pool
+  connectionLimit: 10,
   host: 'localhost',
   user: 'webprog',
   password: 'VgJUjBd8',
