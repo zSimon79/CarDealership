@@ -1,11 +1,11 @@
 import connectionPool from './dbinit.js';
 
-async function createListing({ brand, city, price, date, userId }) {
+async function createListing({ brand, model, city, motor, price, date, userId }) {
   const sql = `
-        INSERT INTO Autok (marka, varos, ar, datum, felhasznaloID)
-        VALUES (?, ?, ?, ?, ?);
+        INSERT INTO Autok (marka, model, varos, motor, ar, datum, felhasznaloID)
+        VALUES (?, ?, ?, ?, ?, ?, ?);
     `;
-  const [result] = await connectionPool.execute(sql, [brand, city, price, date, userId]);
+  const [result] = await connectionPool.execute(sql, [brand, model, city, motor, price, date, userId]);
   return result.insertId;
 }
 
@@ -21,13 +21,13 @@ async function getListingById(listingId) {
   return rows[0];
 }
 
-async function updateListing({ listingId, brand, city, price, date }) {
+async function updateListing({ listingId, brand, model, city, motor, price, date }) {
   const sql = `
         UPDATE Autok
-        SET marka = ?, varos = ?, ar = ?, datum = ?
+        SET marka = ?, model = ?, varos = ?, motor = ?, ar = ?, datum = ?
         WHERE autoID = ?;
     `;
-  await connectionPool.execute(sql, [brand, city, price, date, listingId]);
+  await connectionPool.execute(sql, [brand, model, city, motor, price, date, listingId]);
 }
 
 async function deleteListing(listingId) {
@@ -60,10 +60,19 @@ async function addImageToListing({ listingId, filename }) {
   await connectionPool.execute(sql, [listingId, filename]);
 }
 
+async function deleteImageById(imageId) {
+  const sql = 'DELETE FROM Kep WHERE kepID = ?;';
+  const [result] = await connectionPool.execute(sql, [imageId]);
+  return result.affectedRows;
+}
+
 async function getImagesByCarId(listingId) {
-  const sql = 'SELECT fajlnev FROM Kep WHERE autoID = ?;';
+  const sql = 'SELECT kepID, fajlnev FROM Kep WHERE autoID = ?;';
   const [rows] = await connectionPool.execute(sql, [listingId]);
-  return rows;
+  return rows.map((row) => ({
+    id: row.kepID,
+    fajlnev: row.fajlnev,
+  }));
 }
 
 async function searchListings(filters) {
@@ -74,9 +83,17 @@ async function searchListings(filters) {
     query += ' AND marka LIKE ?';
     params.push(`%${filters.marka}%`);
   }
+  if (filters.model) {
+    query += ' AND model LIKE ?';
+    params.push(`%${filters.model}%`);
+  }
   if (filters.varos) {
     query += ' AND varos LIKE ?';
     params.push(`%${filters.varos}%`);
+  }
+  if (filters.motor) {
+    query += ' AND motor LIKE ?';
+    params.push(`%${filters.motor}%`);
   }
   if (filters.minAr) {
     query += ' AND ar >= ?';
@@ -105,6 +122,7 @@ export {
   getAllUsers,
   deleteUser,
   addImageToListing,
+  deleteImageById,
   getImagesByCarId,
   searchListings,
 };

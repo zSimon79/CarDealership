@@ -8,7 +8,7 @@ body {
   font-family: 'Arial', sans-serif;
   line-height: 1.6;
   padding: 20px;
-  background-color: #f4f4f4;
+  background-color: #d1d1bb;
 }
 
 h1 {
@@ -58,3 +58,37 @@ label {
   font-weight: bold;
 }
 
+#listings {
+  list-style: none;
+  padding: 0;
+}
+
+.listing-item {
+  cursor: pointer;
+  padding: 10px;
+  border: 1px solid #ccc;
+  margin-bottom: 5px;
+  transition: background-color 0.3s;
+}
+
+.listing-item:hover {
+  background-color: #f4f4f4;
+}
+
+.details {
+  padding: 10px;
+  border-top: 1px solid #ccc;
+}
+
+.imageList img {
+  width: 600px;
+  height: auto;
+  display: block;
+  margin: 10px 0;
+  border: 1px solid #ccc; 
+}
+
+.imageList li {
+  margin-bottom: 20px;
+  list-style-type: none;
+}

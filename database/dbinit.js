@@ -27,7 +27,9 @@ export async function createTableListings() {
       CREATE TABLE IF NOT EXISTS Autok (
         autoID INT AUTO_INCREMENT PRIMARY KEY,
         marka VARCHAR(50) NOT NULL,
+        model VARCHAR(100) NOT NULL,
         varos VARCHAR(50) NOT NULL,
+        motor VARCHAR(50) NOT NULL,
         ar FLOAT NOT NULL,
         datum DATE NOT NULL,
         felhasznaloID INT,

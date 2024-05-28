@@ -1,27 +1,32 @@
 <!DOCTYPE html>
 <html lang="hu">
 <head>
-    <title>Listing Details</title>
-    <link rel="stylesheet" href="../public/style.css">
+    <title>Listázás részlet</title>
+    <link rel="stylesheet" href="../../style.css">
+    <script src = "../../ajax.js"></script>
 </head>
 <body>
-    <h1><%= listing.marka %> - Details</h1>
-    <p>Price: <%= listing.ar %></p>
-    <p>City: <%= listing.varos %></p>
-    <p>Date: <%= listing.datum.toISOString().slice(0, 10) %></p>
+    <h1><%= listing.marka %> - <%= listing.model %></h1>
+    <p>Ár: <%= listing.ar %></p>
+    <p>Város: <%= listing.varos %></p>
+    <p>Dárum: <%= listing.datum.toISOString().slice(0, 10) %></p>
+    <p>Motor: <%= listing.motor %></p>
 
-    <h3>Images</h3>
+    <h3>Képek</h3>
     <ul>
         <% listing.images.forEach(function(image) { %>
-            <li><img src="../uploads/<%= image.fajlnev %>" alt="<%= image.fajlnev %>"></li>
+            <li class="imageList" id="image-<%= image.id %>">
+                <img src="../../uploads/<%= image.fajlnev %>" alt="<%= image.fajlnev %>">
+                <button class="listButton" onclick="deleteImage('<%= image.id %>', '<%= image.id %>')">Törlés</button>
+            </li>
         <% }) %>
     </ul>
 
     <form action="/listings/<%= listing.autoID %>/images" method="post" enctype="multipart/form-data">
         <input type="file" name="image">
-        <button type="submit">Upload Image</button>
+        <button type="submit">Kép feltöltése</button>
     </form>
 
-    <a href="/">Back to Listings</a>
+    <a href="/">Vissza a főoldalra</a>
 </body>
 </html>

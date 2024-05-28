@@ -2,8 +2,8 @@
 <html>
 <head>
     <title>Listázások</title>
-    <link rel="stylesheet" href="../public/style.css">
-    <script src = "../public/script.js"></script>
+    <link rel="stylesheet" href="./style.css">
+    <script src = "./ajax.js"></script>
 </head>
 <body>
     <h1>Listázások</h1>
@@ -11,8 +11,14 @@
         <label for="brand">Márka:</label>
         <input type="text" id="brand" name="marka" placeholder="Márka" value="<%= searchQuery.marka || '' %>">
 
+        <label for="model">Model:</label>
+        <input type="text" id="model" name="model" placeholder="Model" value="<%= searchQuery.model || '' %>">
+
         <label for="city">Város:</label>
         <input type="text" id="city" name="varos" placeholder="Város" value="<%= searchQuery.varos || '' %>">
+
+        <label for="fuel">Motor:</label>
+        <input type="text" id="fuel" name="motor" placeholder="Üzemanyag típus" value="<%= searchQuery.marka || '' %>">
 
         <label for="minPrice">Min ár:</label>
         <input type="number" id="minPrice" name="minAr" placeholder="Minimum ár" value="<%= searchQuery.minAr || '' %>">
@@ -23,15 +29,17 @@
         <label for="date">Dátum:</label>
         <input type="date" id="date" name="datum" value="<%= searchQuery.datum || '' %>">
 
-        <button type="submit">Search</button>
+        <button type="submit">Keresés</button>
     </form>
 
-    <ul>
+    <ul id="listings">
         <% listings.forEach(function(listing) { %>
-            <li>
-                <h2><%= listing.marka %> - <%= listing.ar %></h2>
-                <p>Hely: <%= listing.varos %></p>
-                <a href="/listings/<%= listing.autoID %>">Részletek</a>
+            <li class="listing-item" onclick="loadDetails('<%= listing.autoID %>')">
+                <div class="listing-preview">
+                    <h2><%= listing.marka %> - <%= listing.model %></h2>
+                    <p>Price: <%= listing.ar %></p>
+                </div>
+                <div id="details-<%= listing.autoID %>" class="details" style="display:none;"></div>
             </li>
         <% }) %>
     </ul>
