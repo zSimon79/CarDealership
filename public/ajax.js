@@ -1,5 +1,24 @@
-/* eslint-disable no-unused-vars */
-/* exported loadDetails, deleteImage */
+function addDetails(data, detailsDiv, listingId) {
+  detailsDiv.textContent = '';
+
+  const cityP = document.createElement('p');
+  cityP.textContent = `Város: ${data.varos}`;
+  detailsDiv.appendChild(cityP);
+
+  const dateP = document.createElement('p');
+  dateP.textContent = `Dátum: ${new Date(data.datum).toISOString().slice(0, 10)}`;
+  detailsDiv.appendChild(dateP);
+
+  const fuelP = document.createElement('p');
+  fuelP.textContent = `Motor: ${data.motor}`;
+  detailsDiv.appendChild(fuelP);
+
+  const detailsLink = document.createElement('a');
+  detailsLink.href = `/listings/details/${listingId}`;
+  detailsLink.textContent = 'Részletek';
+  detailsDiv.appendChild(detailsLink);
+}
+
 function loadDetails(listingId) {
   const detailsDiv = document.getElementById(`details-${listingId}`);
 
@@ -11,23 +30,17 @@ function loadDetails(listingId) {
   fetch(`/listings/${listingId}`)
     .then((response) => {
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        throw new Error('Hálózati hiba');
       }
       return response.json();
     })
     .then((data) => {
-      const content = `
-              <p>City: ${data.varos}</p>
-              <p>Date: ${new Date(data.datum).toISOString().slice(0, 10)}</p>
-              <p>Fuel Type: ${data.motor}</p>
-              <a href="/listings/details/${listingId}">Részletek</a>
-          `;
-      detailsDiv.innerHTML = content;
+      addDetails(data, detailsDiv, listingId);
       detailsDiv.style.display = 'block';
     })
     .catch((error) => {
       console.error('Fetch error:', error);
-      detailsDiv.innerHTML = '<p>Error loading details. Please try again.</p>';
+      detailsDiv.textContent = 'Hiba a részletek betöltésében.';
       detailsDiv.style.display = 'block';
     });
 }
@@ -51,3 +64,23 @@ function deleteImage(imageId, imageIndex) {
       alert('Hiba történt a kép törlésekor.');
     });
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+  const listingItems = document.querySelectorAll('.listing-item');
+  listingItems.forEach((item) => {
+    item.addEventListener('click', () => {
+      const listingId = item.getAttribute('data-listing-id');
+      loadDetails(listingId);
+    });
+  });
+
+  const deleteButtons = document.querySelectorAll('.deleteButton');
+  deleteButtons.forEach((button) => {
+    button.addEventListener('click', (event) => {
+      event.stopPropagation();
+      const imageId = button.getAttribute('data-image-id');
+      const imageIndex = button.getAttribute('data-image-index');
+      deleteImage(imageId, imageIndex);
+    });
+  });
+});

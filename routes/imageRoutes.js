@@ -23,9 +23,9 @@ router.delete('/images/delete/:imageId', async (req, res) => {
     const result = await deleteImageById(req.params.imageId);
     console.log(result);
     if (result > 0) {
-      res.json({ success: true });
+      res.status(200).json({ success: true, message: 'Kép törölve' });
     } else {
-      res.json({ success: false, message: 'A kép nem található.' });
+      res.status(404).send({ success: false, message: 'Kép nem található' });
     }
   } catch (error) {
     console.error('Hiba a kép törlésekor', error);

@@ -34,7 +34,7 @@
 
     <ul id="listings">
         <% listings.forEach(function(listing) { %>
-            <li class="listing-item" onclick="loadDetails('<%= listing.autoID %>')">
+            <li class="listing-item" data-listing-id="<%= listing.autoID %>">
                 <div class="listing-preview">
                     <h2><%= listing.marka %> - <%= listing.model %></h2>
                     <p>Price: <%= listing.ar %></p>
