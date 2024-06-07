@@ -6,10 +6,11 @@
     <script src = "../../ajax.js"></script>
 </head>
 <body>
+    <%- include('_header') %>
     <h1><%= listing.marka %> - <%= listing.model %></h1>
     <p>Ár: <%= listing.ar %></p>
     <p>Város: <%= listing.varos %></p>
-    <p>Dárum: <%= listing.datum.toISOString().slice(0, 10) %></p>
+    <p>Dátum: <%= listing.datum.toISOString().slice(0, 10) %></p>
     <p>Motor: <%= listing.motor %></p>
 
     <h3>Képek</h3>
@@ -17,15 +18,19 @@
         <% listing.images.forEach(function(image) { %>
             <li class="imageList" id="image-<%= image.id %>">
                 <img src="../../uploads/<%= image.fajlnev %>" alt="<%= image.fajlnev %>">
-                <button class="deleteButton" data-image-id="<%= image.id %>" data-image-index="<%= image.id %>">Törlés</button>
+                <% if (userId === listing.felhasznaloID) { %>
+                    <button class="deleteButton" onclick="deleteImage('<%= image.id %>', '<%= image.id %>')">Törlés</button>
+                <% } %>
             </li>
         <% }) %>
     </ul>
 
-    <form action="/listings/<%= listing.autoID %>/images" method="post" enctype="multipart/form-data">
-        <input type="file" name="image">
-        <button type="submit">Kép feltöltése</button>
-    </form>
+    <% if (userId === listing.felhasznaloID) { %>
+        <form action="/listings/<%= listing.autoID %>/images" method="post" enctype="multipart/form-data">
+            <input type="file" name="image">
+            <button type="submit">Kép feltöltése</button>
+        </form>
+    <% } %>
 
     <a href="/">Vissza a főoldalra</a>
 </body>

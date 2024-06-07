@@ -6,16 +6,8 @@
     <link rel="stylesheet" href="./style.css">
 </head>
 <body>
+    <%- include('_header') %>
     <h1>Felhasználók</h1>
-
-    <h2>Új felhasználó hozzáadása</h2>
-    <form action="/users" method="post">
-        <label for="name">Név:</label>
-        <input type="text" id="name" name="name" required>
-        <button type="submit">Hozzáadás</button>
-    </form>
-
-    <h2>Felhasználók</h2>
     <ul>
         <% users.forEach(function(user) { %>
             <li>

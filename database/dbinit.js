@@ -15,8 +15,9 @@ export default connectionPool;
 export async function createTableUsers() {
   const sql = `
       CREATE TABLE IF NOT EXISTS Felhasznalok (
-        felhasznaloID INT AUTO_INCREMENT PRIMARY KEY,
-        nev VARCHAR(100) NOT NULL
+        felhasznaloID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+        nev VARCHAR(100) NOT NULL UNIQUE,
+        hash_jelszo VARCHAR(100) NOT NULL
       );
     `;
   await connectionPool.query(sql);

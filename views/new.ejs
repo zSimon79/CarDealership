@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="../style.css">
 </head>
 <body>
+    <%- include('_header') %>
     <h1>Új listázás</h1>
 
     <form action="/listings" method="post">
@@ -26,12 +27,8 @@
         <label for="date">Dátum:</label>
         <input type="date" id="date" name="date" required>
 
-        <label for="userId">Felhasználó:</label>
-        <select name="userId" id="userId">
-            <% users.forEach(function(user) { %>
-                <option value="<%= user.felhasznaloID %>"><%= user.nev %></option>
-            <% }) %>
-        </select>
+        <p>Felhasználó: <strong><%= user %></strong></p>
+        <input type="hidden" name="userId" value="<%= userId %>">
 
         <button type="submit">Hozzáadás</button>
     </form>

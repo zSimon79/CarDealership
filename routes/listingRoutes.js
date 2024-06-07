@@ -6,8 +6,8 @@ import {
   getListingById,
   updateListing,
   deleteListing,
-  getAllUsers,
   getImagesByCarId,
+  findUserByUsername,
   searchListings,
 } from '../database/dbquery.js';
 
@@ -24,8 +24,8 @@ const listingValidation = [
 
 router.get('/new', async (req, res) => {
   try {
-    const users = await getAllUsers();
-    res.render('new', { users, errors: [] });
+    const user = await findUserByUsername(req.cookies.user);
+    res.render('new', { errors: [], user: user.nev, userId: user.felhasznaloID });
   } catch (error) {
     res.status(500).render('error', { error: 'Form hiba' });
   }
@@ -37,7 +37,6 @@ router.post('/', listingValidation, async (req, res) => {
     if (req.headers['x-requested-with'] === 'XMLHttpRequest') {
       return res.status(400).json({ errors: errors.array() });
     }
-    // Regular form submission error handling
     return res.status(400).render('new', { errors: errors.array(), data: req.body });
   }
 
@@ -75,7 +74,7 @@ router.get(
         console.log('AJAX request');
         res.json(listings); // Send JSON for AJAX requests
       } else {
-        res.render('index', { listings, searchQuery: req.query });
+        res.render('index', { listings, searchQuery: req.query, user: req.cookies.user });
       }
     } catch (error) {
       res.status(500).render('error', { error: error.message });
@@ -119,10 +118,11 @@ router.delete('/:id', async (req, res) => {
 router.get('/details/:id', async (req, res) => {
   try {
     const listing = await getListingById(req.params.id);
+    const userId = await findUserByUsername(req.cookies.user);
     if (listing) {
       const images = await getImagesByCarId(req.params.id);
       listing.images = images;
-      res.render('details', { listing });
+      res.render('details', { listing, user: req.cookies.user, userId: userId.felhasznaloID });
     } else {
       res.status(404).render('error', { message: 'Listázás nem található' });
     }

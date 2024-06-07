@@ -35,9 +35,9 @@ async function deleteListing(listingId) {
   await connectionPool.execute(sql, [listingId]);
 }
 
-async function createUser(name) {
-  const sql = 'INSERT INTO Felhasznalok (nev) VALUES (?);';
-  const [result] = await connectionPool.execute(sql, [name]);
+async function createUser(name, hashPasswd) {
+  const sql = 'INSERT INTO Felhasznalok (nev,hash_jelszo) VALUES (?, ?);';
+  const [result] = await connectionPool.execute(sql, [name, hashPasswd]);
   return result.insertId;
 }
 
@@ -50,6 +50,24 @@ async function getAllUsers() {
   const sql = 'SELECT * FROM Felhasznalok;';
   const [rows] = await connectionPool.query(sql);
   return rows;
+}
+
+async function findUserByUsername(name) {
+  const sql = 'SELECT * FROM Felhasznalok WHERE nev = ?;';
+  const [rows] = await connectionPool.execute(sql, [name]);
+  return rows[0];
+}
+
+async function getUserPassword(name) {
+  const sql = 'SELECT hash_jelszo FROM Felhasznalok WHERE nev = ?;';
+  const [rows] = await connectionPool.execute(sql, [name]);
+  return rows[0];
+}
+
+async function getUserById(userId) {
+  const sql = 'SELECT * FROM Felhasznalok WHERE felhasznaloID = ?;';
+  const [rows] = await connectionPool.execute(sql, [userId]);
+  return rows[0];
 }
 
 async function addImageToListing({ listingId, filename }) {
@@ -120,6 +138,9 @@ export {
   deleteListing,
   createUser,
   getAllUsers,
+  getUserById,
+  findUserByUsername,
+  getUserPassword,
   deleteUser,
   addImageToListing,
   deleteImageById,
