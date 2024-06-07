@@ -45,18 +45,17 @@ function loadDetails(listingId) {
     });
 }
 
-function deleteImage(imageId, imageIndex) {
+function deleteImage(imageId) {
   fetch(`/listings/images/delete/${imageId}`, {
     method: 'DELETE',
   })
-    .then((response) => response.json())
-    .then((data) => {
-      if (data.success) {
-        const imageElement = document.getElementById(`image-${imageIndex}`);
+    .then((response) => {
+      if (response.ok) {
+        const imageElement = document.getElementById(`image-${imageId}`);
         imageElement.parentNode.removeChild(imageElement);
         alert('Kép sikeresen törölve!');
       } else {
-        alert(`Hiba történt a kép törlésekor: ${data.message}`);
+        response.text().then((text) => alert(`Hiba történt a kép törlésekor: ${text}`));
       }
     })
     .catch((error) => {
@@ -79,8 +78,8 @@ document.addEventListener('DOMContentLoaded', () => {
     button.addEventListener('click', (event) => {
       event.stopPropagation();
       const imageId = button.getAttribute('data-image-id');
-      const imageIndex = button.getAttribute('data-image-index');
-      deleteImage(imageId, imageIndex);
+      console.log('Gomb', imageId);
+      deleteImage(imageId);
     });
   });
 });

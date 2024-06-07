@@ -1,9 +1,5 @@
 import jwt from 'jsonwebtoken';
 
-export function generateToken(user) {
-  return jwt.sign({ userId: user.id, username: user.username }, process.env.JWT_SECRET_KEY, { expiresIn: '12h' });
-}
-
 export function verifyToken(req, res, next) {
   const token = req.cookies.token || req.headers.authorization?.split(' ')[1];
   if (!token) {

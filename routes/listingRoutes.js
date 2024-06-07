@@ -71,8 +71,7 @@ router.get(
         listings = await getAllListings();
       }
       if (req.headers['x-requested-with'] === 'XMLHttpRequest') {
-        console.log('AJAX request');
-        res.json(listings); // Send JSON for AJAX requests
+        res.json(listings);
       } else {
         res.render('index', { listings, searchQuery: req.query, user: req.cookies.user });
       }

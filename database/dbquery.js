@@ -21,6 +21,12 @@ async function getListingById(listingId) {
   return rows[0];
 }
 
+async function getListingOwner(listingId) {
+  const sql = 'SELECT f.nev FROM Autok a JOIN Felhasznalok f On a.felhasznaloID=f.felhasznaloID WHERE autoID = ?;';
+  const [rows] = await connectionPool.execute(sql, [listingId]);
+  return rows[0];
+}
+
 async function updateListing({ listingId, brand, model, city, motor, price, date }) {
   const sql = `
         UPDATE Autok
@@ -134,6 +140,7 @@ export {
   createListing,
   getAllListings,
   getListingById,
+  getListingOwner,
   updateListing,
   deleteListing,
   createUser,
