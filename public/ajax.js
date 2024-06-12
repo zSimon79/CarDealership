@@ -45,9 +45,15 @@ function loadDetails(listingId) {
     });
 }
 
-function deleteImage(imageId) {
+function deleteImage(imageId, userRole) {
   fetch(`/listings/images/delete/${imageId}`, {
     method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      szerep: userRole,
+    }),
   })
     .then((response) => {
       if (response.ok) {

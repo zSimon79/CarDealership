@@ -63,7 +63,6 @@ router.get(
     try {
       const filters = req.query;
       let listings = [];
-      console.log('Normal request');
 
       if (Object.values(filters).some((v) => v !== undefined && v !== '' && v != null)) {
         listings = await searchListings(filters);
@@ -117,16 +116,30 @@ router.delete('/:id', async (req, res) => {
 router.get('/details/:id', async (req, res) => {
   try {
     const listing = await getListingById(req.params.id);
-    const userId = await findUserByUsername(req.cookies.user);
     if (listing) {
       const images = await getImagesByCarId(req.params.id);
       listing.images = images;
-      res.render('details', { listing, user: req.cookies.user, userId: userId.felhasznaloID });
+      if (req.cookies.user) {
+        const userId = await findUserByUsername(req.cookies.user);
+        res.render('details', {
+          listing,
+          user: req.cookies.user || null,
+          userId: userId.felhasznaloID || null,
+          userRole: userId.szerep || null,
+        });
+      } else {
+        res.render('details', {
+          listing,
+          user: null,
+          userId: null,
+          userRole: null,
+        });
+      }
     } else {
-      res.status(404).render('error', { message: 'Listázás nem található' });
+      res.status(404).render('error', { message: 'Listázás nem található', user: null });
     }
   } catch (error) {
-    res.status(500).render('error', { error: error.message });
+    res.status(500).render('error', { error: error.message, user: null });
   }
 });
 

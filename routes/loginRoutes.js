@@ -38,7 +38,9 @@ router.post('/', async (req, res) => {
     if (isMatch) {
       const token = jwt.sign({ userId: user.id, username: user.nev }, secret, { expiresIn: '12h' });
       res.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'strict' });
-      res.cookie('user', username, { httpOnly: true, secure: true });
+      res.cookie('user', user.nev, { httpOnly: true, secure: true });
+      res.cookie('role', user.szerep, { httpOnly: true, secure: true });
+      res.cookie('userId', user.felhasznaloID, { httpOnly: true, secure: true });
       res.redirect('/listings');
     } else {
       res.status(401).send('Hibás felhasználónév vagy jelszó!');
@@ -50,10 +52,10 @@ router.post('/', async (req, res) => {
 });
 
 router.get('/logout', (req, res) => {
-  res.cookie('token', '', {
-    httpOnly: true,
-    expires: new Date(0),
-  });
+  res.clearCookie('token');
+  res.clearCookie('user');
+  res.clearCookie('role');
+  res.clearCookie('userId');
   res.redirect('/login');
 });
 

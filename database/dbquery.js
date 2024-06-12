@@ -53,7 +53,7 @@ async function deleteUser(userId) {
 }
 
 async function getAllUsers() {
-  const sql = 'SELECT * FROM Felhasznalok;';
+  const sql = 'SELECT felhasznaloID, nev, szerep FROM Felhasznalok;';
   const [rows] = await connectionPool.query(sql);
   return rows;
 }

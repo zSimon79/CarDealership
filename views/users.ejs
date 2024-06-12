@@ -4,19 +4,22 @@
     <meta charset="UTF-8">
     <title>Felhasználók</title>
     <link rel="stylesheet" href="./style.css">
+    <script src = "../../userAjax.js"></script>
 </head>
 <body>
     <%- include('_header') %>
     <h1>Felhasználók</h1>
-    <ul>
-        <% users.forEach(function(user) { %>
-            <li>
-                <%= user.name %> 
-                <form action="/users/<%= user.id %>?_method=DELETE" method="post" style="display:inline;">
-                    <button type="submit">Törlés</button>
-                </form>
-            </li>
-        <% }); %>
+    <ul id="userList">
+      
     </ul>
+
+    <div id="confirmationModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p id="modalText">Biztosan törölni szeretnéd ezt a felhasználót?</p>
+            <button onclick="handleDelete(true)">Igen</button>
+            <button onclick="handleDelete(false)">Nem</button>
+        </div>
+    </div>
 </body>
 </html>

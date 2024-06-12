@@ -1,23 +1,46 @@
 import express from 'express';
-import { getAllUsers, deleteUser } from '../database/dbquery.js';
+import { getAllUsers, deleteUser, findUserByUsername, getUserById } from '../database/dbquery.js';
 
 const router = express.Router();
 
 router.get('/', async (req, res) => {
+  const activeUser = await findUserByUsername(req.cookies.user);
+  if (req.cookies.szerep !== 'admin') {
+    res.status(403).send('Nincs jogosultságod a felhasználók megtekintésére!');
+  } else {
+    try {
+      const users = await getAllUsers();
+      res.status(200).render('users', { users, user: activeUser.nev });
+    } catch (error) {
+      res.status(500).send('Nincs ilyen felhasználó!');
+    }
+  }
+});
+
+router.get('/list', async (req, res) => {
   try {
     const users = await getAllUsers();
-    res.render('users', { users, user: req.cookies.user });
+    res.status(200).json(users);
   } catch (error) {
     res.status(500).send('Nincs ilyen felhasználó!');
   }
 });
 
 router.delete('/:id', async (req, res) => {
-  try {
-    await deleteUser(req.params.id);
-    res.redirect('/users');
-  } catch (error) {
-    res.status(500).send('Ne sikerült a felhasználót törölni!');
+  if (req.cookies.role !== 'admin') {
+    res.status(403).send('Nincs jogosultságod a felhasználó törlésére!');
+  } else {
+    try {
+      const user = getUserById(req.params.id);
+      await deleteUser(req.params.id);
+      if (req.cookies.user === user.nev) {
+        res.status(200).send('Felhasználó törölve és kijelentkeztetve.').redirect('/login');
+      }
+      res.status(200).redirect('/users');
+    } catch (error) {
+      console.error('Hiba a felhasználó törlésekor:', error);
+      res.status(500).send('Ne sikerült a felhasználót törölni!');
+    }
   }
 });
 

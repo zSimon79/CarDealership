@@ -22,21 +22,20 @@ router.post('/:id/images', upload.single('image'), async (req, res) => {
 });
 
 router.delete('/images/delete/:imageId', async (req, res) => {
-  if (req.user.username !== req.cookies.user) {
+  if (req.user.username !== req.cookies.user || req.body.szerep !== 'admin') {
     res.status(500).send('Nincs joga törölni a képet.');
-  }
-  try {
-    console.log(req.params);
-    const result = await deleteImageById(req.params.imageId);
-    console.log(result);
-    if (result > 0) {
-      res.status(200).send('Kép törölve');
-    } else {
-      res.status(404).send('Kép nem található');
+  } else {
+    try {
+      const result = await deleteImageById(req.params.imageId);
+      if (result > 0) {
+        res.status(200).send('Kép törölve');
+      } else {
+        res.status(404).send('Kép nem található');
+      }
+    } catch (error) {
+      console.error('Hiba a kép törlésekor', error);
+      res.status(500).send('Szerver hiba történt.');
     }
-  } catch (error) {
-    console.error('Hiba a kép törlésekor', error);
-    res.status(500).send('Szerver hiba történt.');
   }
 });
 

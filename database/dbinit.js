@@ -17,7 +17,8 @@ export async function createTableUsers() {
       CREATE TABLE IF NOT EXISTS Felhasznalok (
         felhasznaloID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
         nev VARCHAR(100) NOT NULL UNIQUE,
-        hash_jelszo VARCHAR(100) NOT NULL
+        hash_jelszo VARCHAR(100) NOT NULL,
+        szerep ENUM('admin', 'vendeg', 'felhasznalo') NOT NULL DEFAULT 'vendeg'
       );
     `;
   await connectionPool.query(sql);
@@ -34,7 +35,7 @@ export async function createTableListings() {
         ar FLOAT NOT NULL,
         datum DATE NOT NULL,
         felhasznaloID INT,
-        FOREIGN KEY (felhasznaloID) REFERENCES Felhasznalok(felhasznaloID)
+        FOREIGN KEY (felhasznaloID) REFERENCES Felhasznalok(felhasznaloID) ON DELETE CASCADE
       );
     `;
   await connectionPool.query(sql);
@@ -46,7 +47,7 @@ export async function createTableImages() {
         kepID INT AUTO_INCREMENT PRIMARY KEY,
         autoID INT,
         fajlnev VARCHAR(255) NOT NULL,
-        FOREIGN KEY (autoID) REFERENCES Autok(autoID)
+        FOREIGN KEY (autoID) REFERENCES Autok(autoID) ON DELETE CASCADE
       );
     `;
   await connectionPool.query(sql);

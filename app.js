@@ -7,7 +7,7 @@ import loginRouter from './routes/loginRoutes.js';
 import listingsRouter from './routes/listingRoutes.js';
 import usersRouter from './routes/userRoutes.js';
 import imagesRouter from './routes/imageRoutes.js';
-import { verifyToken } from './middleware/jwt.js';
+import { verifyToken, optionalAuth } from './middleware/jwt.js';
 
 const app = express();
 const filename = fileURLToPath(import.meta.url);
@@ -23,7 +23,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static(path.join(dirname, 'uploads')));
 
 app.use('/login', loginRouter);
-app.use('/listings', verifyToken, listingsRouter);
+app.use('/listings', optionalAuth, listingsRouter);
 app.use('/users', verifyToken, usersRouter);
 app.use('/listings', verifyToken, imagesRouter); // Images is listinget használ,mert a listázáshoz töltjük a képet
 
