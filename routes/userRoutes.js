@@ -1,11 +1,11 @@
 import express from 'express';
-import { getAllUsers, deleteUser, findUserByUsername, getUserById } from '../database/dbquery.js';
+import { getAllUsers, deleteUser, getUserById } from '../database/dbquery.js';
 
 const router = express.Router();
 
 router.get('/', async (req, res) => {
-  const activeUser = await findUserByUsername(req.cookies.user);
-  if (req.cookies.szerep !== 'admin') {
+  const activeUser = await getUserById(req.cookies.userId);
+  if (req.cookies.role !== 'admin') {
     res.status(403).send('Nincs jogosultságod a felhasználók megtekintésére!');
   } else {
     try {

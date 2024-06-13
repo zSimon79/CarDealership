@@ -99,6 +99,36 @@ async function getImagesByCarId(listingId) {
   }));
 }
 
+async function createOffer({ listingId, offerorId, listerId, price }) {
+  const sql = 'INSERT INTO ajanlatok (autoId, ajanloId, tulajId, ar) VALUES (?, ?, ?, ?);';
+  const [result] = await connectionPool.execute(sql, [listingId, offerorId, listerId, price]);
+  return result.insertId;
+}
+
+async function getOffersByCarId(listingId) {
+  const sql = 'SELECT a.*, f.nev FROM ajanlatok a JOIN felhasznalok f ON a.ajanloId=f.felhasznaloId WHERE autoId = ?;';
+  const [rows] = await connectionPool.execute(sql, [listingId]);
+  return rows;
+}
+
+async function getOfferByOfferorId(userId) {
+  const sql = 'SELECT * FROM ajanlatok WHERE ajanloId = ?;';
+  const [rows] = await connectionPool.execute(sql, [userId]);
+  return rows[0];
+}
+
+async function getOfferByListerId(userId) {
+  const sql = 'SELECT * FROM ajanlatok WHERE tulajId = ?;';
+  const [rows] = await connectionPool.execute(sql, [userId]);
+  return rows[0];
+}
+
+async function updateOffer(offerId, decision) {
+  console.log(offerId, decision);
+  const sql = 'UPDATE ajanlatok SET statusz = ? WHERE id = ?;';
+  await connectionPool.execute(sql, [decision, offerId]);
+}
+
 async function searchListings(filters) {
   let query = 'SELECT * FROM Autok WHERE 1 = 1';
   const params = [];
@@ -153,4 +183,9 @@ export {
   deleteImageById,
   getImagesByCarId,
   searchListings,
+  createOffer,
+  getOffersByCarId,
+  getOfferByOfferorId,
+  getOfferByListerId,
+  updateOffer,
 };

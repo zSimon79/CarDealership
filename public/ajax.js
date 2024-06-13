@@ -89,3 +89,38 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 });
+
+function handleOfferDecision(offerId, decision) {
+  fetch(`/listings/offers/${offerId}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ decision }),
+  })
+    .then((response) => {
+      if (!response.ok) throw new Error('Network response was not ok.');
+      return response.json();
+    })
+    .then((data) => {
+      const statusElement = document.getElementById(`offerStatus-${offerId}`);
+      statusElement.textContent = `Státusz: ${data.decision}`;
+
+      statusElement.className = '';
+      statusElement.classList.add(`status-${data.decision.replace(/ /g, '')}`);
+    })
+    .catch((error) => console.error('Error:', error));
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const decisionButtons = document.querySelectorAll('.offer-decision');
+
+  decisionButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      const offerId = button.getAttribute('data-offer-id');
+      const decision = button.getAttribute('data-decision');
+      console.log(offerId, decision);
+      handleOfferDecision(offerId, decision);
+    });
+  });
+});

@@ -53,11 +53,29 @@ export async function createTableImages() {
   await connectionPool.query(sql);
 }
 
+export async function createTableOffers() {
+  const sql = `
+    CREATE TABLE IF NOT EXISTS ajanlatok (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      autoId INT NOT NULL,
+      ajanloId INT NOT NULL,
+      tulajId INT NOT NULL,
+      ar INT NOT NULL,
+      statusz ENUM('elfogadva', 'elutasitva', 'folyamatban') NOT NULL DEFAULT 'folyamatban',
+      FOREIGN KEY (autoId) REFERENCES autok(autoId) ON DELETE CASCADE,
+      FOREIGN KEY (ajanloId) REFERENCES felhasznalok(felhasznaloId) ON DELETE CASCADE,
+      FOREIGN KEY (tulajId) REFERENCES felhasznalok(felhasznaloId) ON DELETE CASCADE
+    );
+  `;
+  await connectionPool.query(sql);
+}
+
 async function initializeDatabase() {
   try {
     await createTableUsers();
     await createTableListings();
     await createTableImages();
+    await createTableOffers();
     console.log('All tables were created successfully!');
   } catch (error) {
     console.error('Error creating tables:', error);

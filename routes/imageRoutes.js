@@ -10,7 +10,8 @@ router.post('/:id/images', upload.single('image'), async (req, res) => {
       return res.status(400).json({ message: 'Nincs file megadva' });
     }
     const user = await getListingOwner(req.params.id);
-    if (req.user.username !== user.nev) {
+    console.log(req.body);
+    if (req.body.userId !== user.felhasznaloId && req.body.userRole !== 'admin') {
       return res.status(500).send('Nincs joga feltölteni ide képet.');
     }
     await addImageToListing({ listingId: req.params.id, filename: req.file.filename });

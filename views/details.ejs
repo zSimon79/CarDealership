@@ -29,13 +29,36 @@
         <% }) %>
     </ul>
 
+    <h3>Ajánlatok</h3>
+    <ul>
+        <% offers.forEach(function(offer) { %>
+            <li class="offerList" id="offer-<%= offer.id %>">
+                <p>Felhasználó: <%= offer.nev %>, Ajánlat: <%= offer.ar %> €</p>
+                <p id="offerStatus-<%= offer.id %>" class="status-<%= offer.statusz.replace(/ /g, '') %>">Státusz: <%= offer.statusz %></p>
+                <% if (userId === listing.felhasznaloID) { %>
+                    <button class="offer-decision" data-offer-id="<%= offer.offerId %>" onclick="handleOfferDecision('<%= offer.id %>', 'elfogadva')">Elfogad</button>
+                    <button class="offer-decision" data-offer-id="<%= offer.offerId %>" onclick="handleOfferDecision('<%= offer.id %>', 'elutasitva')">Elutasít</button>
+                <% } %>
+            </li>
+        <% }) %>
+    </ul>
+
     <% if (userId === listing.felhasznaloID  || userRole == 'admin') { %>
         <form action="/listings/<%= listing.autoID %>/images" method="post" enctype="multipart/form-data">
             <input type="file" name="image" required>
+            <input type="hidden" name="userId" value="<%= userId %>">
+            <input type="hidden" name="userRole" value="<%= userRole %>">
             <button type="submit">Kép feltöltése</button>
+        </form>
+    <% } %>
+    <% if (userId !== listing.felhasznaloID ) { %>
+        <form action="/listings/<%= listing.autoID %>/offers" method="post">
+            <input type="number" name="offer" placeholder="Add meg az ajánlatod" required>
+            <button type="submit">Ajánlat küldése</button>
         </form>
     <% } %>
 
     <a href="/">Vissza a főoldalra</a>
+    <%- include('_modal') %>
 </body>
 </html>

@@ -7,8 +7,11 @@ import {
   updateListing,
   deleteListing,
   getImagesByCarId,
-  findUserByUsername,
   searchListings,
+  getUserById,
+  createOffer,
+  getOffersByCarId,
+  updateOffer,
 } from '../database/dbquery.js';
 
 const router = express.Router();
@@ -24,7 +27,7 @@ const listingValidation = [
 
 router.get('/new', async (req, res) => {
   try {
-    const user = await findUserByUsername(req.cookies.user);
+    const user = await getUserById(req.cookies.userId);
     res.render('new', { errors: [], user: user.nev, userId: user.felhasznaloID });
   } catch (error) {
     res.status(500).render('error', { error: 'Form hiba' });
@@ -37,7 +40,7 @@ router.post('/', listingValidation, async (req, res) => {
     if (req.headers['x-requested-with'] === 'XMLHttpRequest') {
       return res.status(400).json({ errors: errors.array() });
     }
-    return res.status(400).render('new', { errors: errors.array(), data: req.body });
+    return res.status(400).redirect('back');
   }
 
   try {
@@ -119,13 +122,15 @@ router.get('/details/:id', async (req, res) => {
     if (listing) {
       const images = await getImagesByCarId(req.params.id);
       listing.images = images;
-      if (req.cookies.user) {
-        const userId = await findUserByUsername(req.cookies.user);
+      const offers = await getOffersByCarId(req.params.id);
+      if (req.cookies.userId) {
+        const user = await getUserById(req.cookies.userId);
         res.render('details', {
           listing,
-          user: req.cookies.user || null,
-          userId: userId.felhasznaloID || null,
-          userRole: userId.szerep || null,
+          user: user.nev || null,
+          userId: user.felhasznaloID || null,
+          userRole: user.szerep || null,
+          offers,
         });
       } else {
         res.render('details', {
@@ -133,6 +138,7 @@ router.get('/details/:id', async (req, res) => {
           user: null,
           userId: null,
           userRole: null,
+          offers,
         });
       }
     } else {
@@ -140,6 +146,47 @@ router.get('/details/:id', async (req, res) => {
     }
   } catch (error) {
     res.status(500).render('error', { error: error.message, user: null });
+  }
+});
+
+router.post('/:id/offers', async (req, res) => {
+  const { id } = req.params;
+  if (!req.user) {
+    res.status(401).json({ message: 'Kérem jelentkezzen be ajánlat tételhez' });
+  } else {
+    try {
+      const car = await getListingById(id);
+      if (car.felhasznaloID === req.cookies.userId) {
+        res.status(403).json({ message: 'Miért tenne ajánlatot a saját kocsijára?.' });
+      } else {
+        await createOffer({
+          listingId: id,
+          offerorId: req.cookies.userId,
+          listerId: car.felhasznaloID,
+          price: req.body.offer,
+        });
+        res.status(201).json({ message: 'Ajánlat feltéve.' });
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Hiba történt ajánláskor.' });
+    }
+  }
+});
+
+router.post('/offers/:id', async (req, res) => {
+  console.log(req.user);
+  const { decision } = req.body;
+  if (['elfogadva', 'elutasitva'].includes(decision)) {
+    try {
+      await updateOffer(req.params.id, decision);
+      res.json({ decision });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Nem sikerült értékelni az ajánlatot.' });
+    }
+  } else {
+    res.status(400).json({ message: 'Hibás döntés.' });
   }
 });
 
