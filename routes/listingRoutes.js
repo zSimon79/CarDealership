@@ -152,7 +152,7 @@ router.get('/details/:id', async (req, res) => {
 router.post('/:id/offers', async (req, res) => {
   const { id } = req.params;
   if (!req.user) {
-    res.status(401).json({ message: 'Kérem jelentkezzen be ajánlat tételhez' });
+    res.status(200).json({ message: 'Kérem jelentkezzen be ajánlat tételhez' });
   } else {
     try {
       const car = await getListingById(id);

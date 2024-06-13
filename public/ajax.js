@@ -90,8 +90,34 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
+function openModal(message) {
+  const messageText = document.getElementById('messageText');
+  messageText.textContent = message;
+  document.getElementById('messageModal').style.display = 'block';
+}
+
+function fetchWithModal(url, options = {}) {
+  return fetch(url, options)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Modal hiba');
+      }
+      return response.json();
+    })
+    .then((data) => {
+      if (data.message) {
+        openModal(data.message);
+      }
+      return data;
+    })
+    .catch((error) => {
+      console.error('Fetch error:', error);
+      openModal('Modal hiba.');
+    });
+}
+
 function handleOfferDecision(offerId, decision) {
-  fetch(`/listings/offers/${offerId}`, {
+  fetchWithModal(`/listings/offers/${offerId}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -123,4 +149,29 @@ document.addEventListener('DOMContentLoaded', () => {
       handleOfferDecision(offerId, decision);
     });
   });
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.getElementById('offerForm');
+  if (form) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const formData = new FormData(form);
+      const offerValue = formData.get('offer');
+
+      const listingId = form.getAttribute('data-listing-id');
+
+      fetchWithModal(`/listings/${listingId}/offers`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ offer: offerValue }),
+      }).catch((error) => {
+        console.error('Error:', error);
+        alert('An error occurred while sending the offer.');
+      });
+    });
+  }
 });

@@ -4,6 +4,7 @@
     <title>Listázás részlet</title>
     <link rel="stylesheet" href="../../style.css">
     <script src = "../../ajax.js"></script>
+    <script src = "../../modal.js"></script>
 </head>
 <body>
     <% if (user) { %>
@@ -52,7 +53,7 @@
         </form>
     <% } %>
     <% if (userId !== listing.felhasznaloID ) { %>
-        <form action="/listings/<%= listing.autoID %>/offers" method="post">
+        <form id="offerForm" data-listing-id="<%= listing.autoID %>">
             <input type="number" name="offer" placeholder="Add meg az ajánlatod" required>
             <button type="submit">Ajánlat küldése</button>
         </form>
