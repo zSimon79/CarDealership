@@ -36,11 +36,10 @@ router.post('/', async (req, res) => {
     const hashPasswd = await getUserPassword(username);
     const isMatch = await bcrypt.compare(password, hashPasswd.hash_jelszo);
     if (isMatch) {
-      const token = jwt.sign({ userId: user.id, username: user.nev }, secret, { expiresIn: '12h' });
+      const token = jwt.sign({ userId: user.felhasznaloID, username: user.nev, szerep: user.szerep }, secret, {
+        expiresIn: '12h',
+      });
       res.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'strict' });
-      res.cookie('user', user.nev, { httpOnly: true, secure: true });
-      res.cookie('role', user.szerep, { httpOnly: true, secure: true });
-      res.cookie('userId', user.felhasznaloID, { httpOnly: true, secure: true });
       res.redirect('/listings');
     } else {
       res.status(401).send('Hibás felhasználónév vagy jelszó!');
@@ -53,9 +52,6 @@ router.post('/', async (req, res) => {
 
 router.get('/logout', (req, res) => {
   res.clearCookie('token');
-  res.clearCookie('user');
-  res.clearCookie('role');
-  res.clearCookie('userId');
   res.redirect('/login');
 });
 

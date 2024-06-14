@@ -22,7 +22,7 @@ async function getListingById(listingId) {
 }
 
 async function getListingOwner(listingId) {
-  const sql = 'SELECT f.nev FROM Autok a JOIN Felhasznalok f On a.felhasznaloID=f.felhasznaloID WHERE autoID = ?;';
+  const sql = 'SELECT f.* FROM Autok a JOIN Felhasznalok f On a.felhasznaloID=f.felhasznaloID WHERE autoID = ?;';
   const [rows] = await connectionPool.execute(sql, [listingId]);
   return rows[0];
 }
@@ -84,6 +84,12 @@ async function addImageToListing({ listingId, filename }) {
   await connectionPool.execute(sql, [listingId, filename]);
 }
 
+async function getImageById(imageId) {
+  const sql = 'SELECT * FROM Kep WHERE kepID = ?;';
+  const [rows] = await connectionPool.execute(sql, [imageId]);
+  return rows[0];
+}
+
 async function deleteImageById(imageId) {
   const sql = 'DELETE FROM Kep WHERE kepID = ?;';
   const [result] = await connectionPool.execute(sql, [imageId]);
@@ -97,6 +103,13 @@ async function getImagesByCarId(listingId) {
     id: row.kepID,
     fajlnev: row.fajlnev,
   }));
+}
+
+async function getImageOwner(imageId) {
+  const sql =
+    'SELECT f.* FROM kep k JOIN Autok a ON k.autoID=a.autoID JOIN Felhasznalok f On a.felhasznaloID=f.felhasznaloID WHERE kepID = ?;';
+  const [rows] = await connectionPool.execute(sql, [imageId]);
+  return rows[0];
 }
 
 async function createOffer({ listingId, offerorId, listerId, price }) {
@@ -124,9 +137,24 @@ async function getOfferByListerId(userId) {
 }
 
 async function updateOffer(offerId, decision) {
-  console.log(offerId, decision);
   const sql = 'UPDATE ajanlatok SET statusz = ? WHERE id = ?;';
   await connectionPool.execute(sql, [decision, offerId]);
+}
+
+async function searchUsers(filters) {
+  let query = 'SELECT * FROM felhasznalok WHERE 1=1';
+  const params = [];
+
+  if (filters.name) {
+    query += ' AND nev LIKE ?';
+    params.push(`%${filters.name}%`);
+  }
+  if (filters.role) {
+    query += ' AND szerep LIKE ?';
+    params.push(`%${filters.role}%`);
+  }
+  const [users] = await connectionPool.execute(query, params);
+  return users;
 }
 
 async function searchListings(filters) {
@@ -182,6 +210,9 @@ export {
   addImageToListing,
   deleteImageById,
   getImagesByCarId,
+  getImageOwner,
+  getImageById,
+  searchUsers,
   searchListings,
   createOffer,
   getOffersByCarId,

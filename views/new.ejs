@@ -1,38 +1,37 @@
 <!DOCTYPE html>
 <html lang="hu">
 <head>
-    <title>Új listázás</title>
-    <link rel="stylesheet" href="../style.css">
+    <title><%= listing ? 'Listázás módosítása' : 'Új listázás' %></title>
+    <link rel="stylesheet" href="<%= listing ? '../../style.css' : '../style.css' %>">
 </head>
 <body>
     <%- include('_header') %>
-    <h1>Új listázás</h1>
+    <h1><%= listing ? 'Listázás módosítása' : 'Új listázás' %></h1>
 
-    <form action="/listings" method="post">
+    <form action="<%= listing ? `/listings/${listing.autoID}/edit` : '/listings' %>" method="post">
         <label for="brand">Márka:</label>
-        <input type="text" id="brand" name="brand" required>
+        <input type="text" id="brand" name="brand" required value="<%= listing ? listing.marka : '' %>">
 
         <label for="model">Model:</label>
-        <input type="text" id="model" name="model" required>
+        <input type="text" id="model" name="model" required value="<%= listing ? listing.model : '' %>">
 
         <label for="city">Város:</label>
-        <input type="text" id="city" name="city" required>
+        <input type="text" id="city" name="city" required value="<%= listing ? listing.varos : '' %>">
 
         <label for="price">Ár:</label>
-        <input type="number" id="price" name="price" required>
+        <input type="number" id="price" name="price" required value="<%= listing ? listing.ar : '' %>">
 
         <label for="motor">Motor:</label>
-        <input type="text" id="motor" name="motor" required>
+        <input type="text" id="motor" name="motor" required value="<%= listing ? listing.motor : '' %>">
 
         <label for="date">Dátum:</label>
-        <input type="date" id="date" name="date" required>
+        <input type="date" id="date" name="date" required value="<%= listing ? listing.datum.toISOString().slice(0, 10) : '' %>">
 
         <p>Felhasználó: <strong><%= user %></strong></p>
-        <input type="hidden" name="userId" value="<%= userId %>">
 
-        <button type="submit">Hozzáadás</button>
+        <button type="submit"><%= listing ? 'Módosít' : 'Hozzáadás' %></button>
     </form>
 
-    <a href="/">Vissza</a>
+    <a href="/" class="button">Vissza</a>
 </body>
 </html>

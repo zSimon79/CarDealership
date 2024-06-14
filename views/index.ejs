@@ -11,7 +11,21 @@
     <% } else { %>
     <%- include('_guestHeader') %>
     <% } %>
+    <% if (user && szerep === 'admin') { %>
+        <a href="/users" class="admin-button">Felhasználók</a>
+    <% } %>
     <h1>Listázások</h1>
+    <ul id="listings">
+        <% listings.forEach(function(listing) { %>
+            <li class="listing-item" data-listing-id="<%= listing.autoID %>">
+                <div class="listing-preview">
+                    <h2><%= listing.marka %> - <%= listing.model %></h2>
+                    <p>Ár: <%= listing.ar %> €</p>
+                </div>
+                <div id="details-<%= listing.autoID %>" class="details" style="display:none;"></div>
+            </li>
+        <% }) %>
+    </ul>
     <form action="/listings" method="get">
         <label for="brand">Márka:</label>
         <input type="text" id="brand" name="marka" placeholder="Márka" value="<%= searchQuery.marka || '' %>">
@@ -37,18 +51,7 @@
         <button type="submit">Keresés</button>
     </form>
 
-    <ul id="listings">
-        <% listings.forEach(function(listing) { %>
-            <li class="listing-item" data-listing-id="<%= listing.autoID %>">
-                <div class="listing-preview">
-                    <h2><%= listing.marka %> - <%= listing.model %></h2>
-                    <p>Price: <%= listing.ar %></p>
-                </div>
-                <div id="details-<%= listing.autoID %>" class="details" style="display:none;"></div>
-            </li>
-        <% }) %>
-    </ul>
 
-    <a href="/listings/new">Új listázás hozzáadása</a>
+    <a href="/listings/new" class="button">Új listázás hozzáadása</a>
 </body>
 </html>

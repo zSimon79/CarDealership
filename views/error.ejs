@@ -6,12 +6,8 @@
     <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-    <% if (user) { %>
-    <%- include('_header') %>
-    <% } else { %>
-    <%- include('_guestHeader') %>
-    <% } %>    <h1>Hiba történt!</h1>
+    <h1>Hiba történt!</h1>
     <p><%= error %></p>
-    <a href="/">Vissza</a>
+    <a href="/" class="button">Vissza</a>
 </body>
 </html>

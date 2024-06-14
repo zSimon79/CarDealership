@@ -1,15 +1,21 @@
 function deleteUser(userId) {
   fetch(`/users/${userId}`, { method: 'DELETE' })
     .then((response) => {
-      console.log('Response:', response);
-      if (response.ok) {
-        const userElement = document.getElementById(`user-${userId}`);
-        if (userElement) {
-          userElement.remove();
-          alert('Felhasználó sikeresen törölve.');
-        }
-      } else {
-        alert('Nem sikerült törölni a felhasználót.');
+      if (!response.ok) {
+        throw new Error('Nem sikerült törölni a felhasználót.');
+      }
+      return response.json();
+    })
+    .then((data) => {
+      alert(data.message);
+
+      if (data.message === 'Felhasználó törölve és kijelentkeztetve.') {
+        window.location.href = '/login/logout';
+      }
+
+      const userElement = document.getElementById(`user-${userId}`);
+      if (userElement) {
+        userElement.remove();
       }
     })
     .catch((error) => {
@@ -32,6 +38,7 @@ function confirmUserDeletion(userId) {
 function createUserItem(user) {
   const li = document.createElement('li');
   li.id = `user-${user.felhasznaloID}`;
+  li.className = 'offerList';
 
   const userInfo = document.createElement('p');
   userInfo.textContent = `${user.nev} - ${user.szerep}`;
@@ -46,8 +53,8 @@ function createUserItem(user) {
 
   return li;
 }
-function loadUsers() {
-  fetch('/users/list')
+function loadUsers(name = '', role = '') {
+  fetch(`/users/list?name=${encodeURIComponent(name)}&role=${encodeURIComponent(role)}`)
     .then((response) => {
       if (!response.ok) {
         throw new Error('Failed to fetch users');
@@ -66,6 +73,14 @@ function loadUsers() {
       alert('Error loading users');
     });
 }
+
+document.addEventListener('submit', (event) => {
+  event.preventDefault();
+  const name = document.getElementById('name').value;
+  const role = document.getElementById('role').value;
+
+  loadUsers(name, role);
+});
 
 document.addEventListener('DOMContentLoaded', () => {
   loadUsers();

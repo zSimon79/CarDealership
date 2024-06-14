@@ -9,6 +9,16 @@
 <body>
     <%- include('_header') %>
     <h1>Felhasználók</h1>
+    <form id="searchForm" action="/users" method="get">
+        <input type="text" id="name" name="name" placeholder="Felhasználó név">
+        <select id="role" name="role">
+            <option value=""></option>
+            <option value="admin">Admin</option>
+            <option value="felhasznalo">Felhasználó</option>
+            <option value="vendeg">Vendég</option>
+        </select>
+        <button type="submit">Keresés</button>
+    </form>
     <ul id="userList">
       
     </ul>
@@ -21,5 +31,6 @@
             <button onclick="handleDelete(false)">Nem</button>
         </div>
     </div>
+    <a href="/" class="button">Vissza a főoldalra</a>
 </body>
 </html>

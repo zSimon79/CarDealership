@@ -45,15 +45,9 @@ function loadDetails(listingId) {
     });
 }
 
-function deleteImage(imageId, userRole) {
+function deleteImage(imageId) {
   fetch(`/listings/images/delete/${imageId}`, {
     method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      szerep: userRole,
-    }),
   })
     .then((response) => {
       if (response.ok) {
@@ -70,6 +64,38 @@ function deleteImage(imageId, userRole) {
     });
 }
 
+function deleteListing(listingId) {
+  fetch(`/listings/${listingId}`, { method: 'DELETE' })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Nem sikerült törölni a listázást.');
+      }
+      return response.json();
+    })
+    .then((data) => {
+      alert(data.message);
+
+      if (data.message === 'Listázás törölve') {
+        window.location.href = '../../listings';
+      }
+    })
+    .catch((error) => {
+      console.error('Hiba a listázás törlésekor:', error);
+      alert('Hiba történt a listázás törlésekor.');
+    });
+}
+
+function confirmListingDeletion(listingId) {
+  const modal = document.getElementById('confirmationModal');
+  modal.style.display = 'block';
+  window.handleDelete = function del(confirm) {
+    if (confirm) {
+      deleteListing(listingId);
+    }
+    modal.style.display = 'none';
+  };
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   const listingItems = document.querySelectorAll('.listing-item');
   listingItems.forEach((item) => {
@@ -84,9 +110,15 @@ document.addEventListener('DOMContentLoaded', () => {
     button.addEventListener('click', (event) => {
       event.stopPropagation();
       const imageId = button.getAttribute('data-image-id');
-      console.log('Gomb', imageId);
       deleteImage(imageId);
     });
+  });
+
+  const deleteListingButton = document.getElementById('deleteListing');
+  deleteListingButton.addEventListener('click', (event) => {
+    event.stopPropagation();
+    const listingId = deleteListingButton.getAttribute('data-listing-id');
+    confirmListingDeletion(listingId);
   });
 });
 
@@ -124,10 +156,6 @@ function handleOfferDecision(offerId, decision) {
     },
     body: JSON.stringify({ decision }),
   })
-    .then((response) => {
-      if (!response.ok) throw new Error('Network response was not ok.');
-      return response.json();
-    })
     .then((data) => {
       const statusElement = document.getElementById(`offerStatus-${offerId}`);
       statusElement.textContent = `Státusz: ${data.decision}`;
@@ -145,7 +173,6 @@ document.addEventListener('DOMContentLoaded', () => {
     button.addEventListener('click', () => {
       const offerId = button.getAttribute('data-offer-id');
       const decision = button.getAttribute('data-decision');
-      console.log(offerId, decision);
       handleOfferDecision(offerId, decision);
     });
   });
