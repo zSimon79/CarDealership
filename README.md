@@ -1,1 +1,1 @@
-# Webprogramozás laborfeladatok
+# Webprog lab exercise
